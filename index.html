@@ -158,7 +158,7 @@
       color: #ffd54f;
     }
 
-    /* Lousa Principal Gigante (Foco Total na Legibilidade) */
+    /* Lousa Principal Gigante */
     .blackboard-main {
       position: relative;
       z-index: 10;
@@ -223,7 +223,7 @@
       transition: width 0.95s linear;
     }
 
-    /* Caixa Central da Pergunta (Texto Grande e Nítido) */
+    /* Caixa Central da Pergunta */
     .riddle-center {
       flex: 1;
       display: flex;
@@ -309,8 +309,8 @@
       100% { transform: translateY(-5px) rotate(2deg); }
     }
 
-    /* Banner Novo Seguidor + Confetes */
-    #follow-banner {
+    /* Banner Comemorativo (Novo Seguidor & Presentes) */
+    #celebration-banner {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -330,12 +330,18 @@
       max-width: 92%;
     }
 
-    #follow-banner.show {
+    #celebration-banner.show {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1);
     }
 
-    .follow-avatar {
+    #celebration-banner.gift-mode {
+      background: linear-gradient(135deg, #4a148c 0%, #880e4f 100%);
+      border-color: #ffea00;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75), 0 0 32px rgba(255, 234, 0, 0.75);
+    }
+
+    .cel-avatar {
       width: 58px;
       height: 58px;
       border-radius: 50%;
@@ -344,15 +350,29 @@
       flex-shrink: 0;
     }
 
-    .follow-tag {
+    #celebration-banner.gift-mode .cel-avatar {
+      border-color: #ffea00;
+    }
+
+    .cel-tag {
       font-size: 13px;
       color: #00e676;
       font-weight: 700;
     }
 
-    .follow-name {
+    #celebration-banner.gift-mode .cel-tag {
+      color: #ffea00;
+    }
+
+    .cel-name {
       font-size: 20px;
       color: #fff;
+    }
+
+    .cel-sub {
+      font-size: 13px;
+      color: #ffe082;
+      margin-top: 2px;
     }
 
     .confetti-piece {
@@ -577,12 +597,13 @@
         </svg>
       </div>
 
-      <!-- Banner Novo Seguidor -->
-      <div id="follow-banner">
-        <img class="follow-avatar" id="follow-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Seguidor" alt="">
+      <!-- Banner Comemorativo (Novo Seguidor & Presentes) -->
+      <div id="celebration-banner">
+        <img class="cel-avatar" id="cel-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Seguidor" alt="">
         <div>
-          <div class="follow-tag">🎉 NOVO SEGUIDOR!</div>
-          <div class="follow-name" id="follow-name">@Aluno</div>
+          <div class="cel-tag" id="cel-tag">🎉 NOVO SEGUIDOR!</div>
+          <div class="cel-name" id="cel-name">@Aluno</div>
+          <div class="cel-sub" id="cel-sub">Bem-vindo(a) à turma!</div>
         </div>
       </div>
 
@@ -612,6 +633,7 @@
       <hr style="border-color:rgba(255,255,255,0.15);">
       <button class="btn-secondary" id="sim-btn" onclick="toggleSimulation()">▶️ Simular Chat Jogando</button>
       <button class="btn-secondary" onclick="testFollowCelebration()">🎉 Testar Novo Seguidor (Confetes)</button>
+      <button class="btn-secondary" onclick="testGiftCelebration()">🎁 Testar Presente (Confetes)</button>
       <button class="btn-secondary" onclick="nextRiddle(false)">⏭️ Pular Charada</button>
       <button class="btn-secondary" style="border-color:#ff5252;color:#ff8a80;" onclick="toggleModal()">Fechar</button>
     </div>
@@ -839,7 +861,7 @@
     let keepAliveTimer = null;
     let reconnectTimer = null;
     let currentWsUrl = '';
-    let followTimer = null;
+    let celTimer = null;
 
     const defaultAvatars = [
       'https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno1',
@@ -1010,23 +1032,38 @@
       startRiddle();
     }
 
-    // Celebração Novo Seguidor (Foto + Confetes, sem pontos)
-    function showFollowCelebration(name, avatar) {
-      const banner = document.getElementById('follow-banner');
-      const fName = document.getElementById('follow-name');
-      const fAvatar = document.getElementById('follow-avatar');
+    // Banner Comemorativo (Novo Seguidor & Presente - sem pontos)
+    function triggerCelebration({ isGift, tag, name, sub, avatar }) {
+      const banner = document.getElementById('celebration-banner');
+      const cTag = document.getElementById('cel-tag');
+      const cName = document.getElementById('cel-name');
+      const cSub = document.getElementById('cel-sub');
+      const cAvatar = document.getElementById('cel-avatar');
       const board = document.getElementById('blackboard');
 
-      fName.textContent = name;
-      fAvatar.src = avatar || defaultAvatars[0];
+      banner.classList.toggle('gift-mode', !!isGift);
+      cTag.textContent = tag;
+      cName.textContent = name;
+      cSub.textContent = sub;
+      cAvatar.src = avatar || defaultAvatars[0];
       banner.classList.add('show');
 
-      playTone(587.33, 0.14, 0.09);
-      setTimeout(() => playTone(783.99, 0.14, 0.09), 110);
-      setTimeout(() => playTone(1046.5, 0.3, 0.1), 220);
+      if (isGift) {
+        playTone(659.25, 0.12, 0.1);
+        setTimeout(() => playTone(783.99, 0.12, 0.1), 100);
+        setTimeout(() => playTone(1046.5, 0.14, 0.1), 200);
+        setTimeout(() => playTone(1318.5, 0.35, 0.11), 300);
+      } else {
+        playTone(587.33, 0.14, 0.09);
+        setTimeout(() => playTone(783.99, 0.14, 0.09), 110);
+        setTimeout(() => playTone(1046.5, 0.3, 0.1), 220);
+      }
 
-      const colors = ['#ffd54f', '#00e676', '#ff5252', '#40c4ff', '#ea80fc', '#ffffff'];
-      for (let i = 0; i < 32; i++) {
+      const colors = isGift
+        ? ['#ffea00', '#ff4081', '#00e5ff', '#76ff03', '#ffffff']
+        : ['#ffd54f', '#00e676', '#ff5252', '#40c4ff', '#ea80fc', '#ffffff'];
+
+      for (let i = 0; i < 36; i++) {
         const conf = document.createElement('div');
         conf.className = 'confetti-piece';
         conf.style.left = `${Math.random() * 94 + 3}%`;
@@ -1036,13 +1073,39 @@
         setTimeout(() => conf.remove(), 2600);
       }
 
-      clearTimeout(followTimer);
-      followTimer = setTimeout(() => banner.classList.remove('show'), 3600);
+      clearTimeout(celTimer);
+      celTimer = setTimeout(() => banner.classList.remove('show'), 3800);
+    }
+
+    function showFollowCelebration(name, avatar) {
+      triggerCelebration({
+        isGift: false,
+        tag: '🎉 NOVO SEGUIDOR!',
+        name,
+        sub: 'Bem-vindo(a) à turma!',
+        avatar
+      });
+    }
+
+    function showGiftCelebration(name, avatar, giftName, repeatCount) {
+      const qtd = repeatCount > 1 ? ` x${repeatCount}` : '';
+      triggerCelebration({
+        isGift: true,
+        tag: '🎁 OBRIGADO PELO PRESENTE!',
+        name,
+        sub: `Enviou ${giftName}${qtd}!`,
+        avatar
+      });
     }
 
     function testFollowCelebration() {
       toggleModal();
       showFollowCelebration('@MariaClara', defaultAvatars[0]);
+    }
+
+    function testGiftCelebration() {
+      toggleModal();
+      showGiftCelebration('@LucasSilva', defaultAvatars[2], 'Rosa', 5);
     }
 
     // Conexão Ponte TikTok
@@ -1098,6 +1161,8 @@
               handleChat(name, avatar, data.comment);
             } else if (ev === 'follow') {
               showFollowCelebration(name, avatar);
+            } else if (ev === 'gift') {
+              showGiftCelebration(name, avatar, data.giftName || 'Presente', data.repeatCount || 1);
             }
           } catch (e) {}
         };
