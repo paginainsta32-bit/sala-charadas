@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Desafio das Charadas ao Vivo | TikTok Live</title>
+  <title>Charadas da Professora | TikTok Live</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Patrick+Hand&display=swap');
 
     * {
       box-sizing: border-box;
@@ -31,33 +31,48 @@
       width: 100vw;
       height: 100dvh;
       max-width: 600px;
-      background: linear-gradient(180deg, #ffecb3 0%, #ffe082 50%, #d7ccc8 100%);
+      background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 55%, #d7ccc8 100%);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 50px 12px 54px;
+      padding-top: 54px;
+      padding-bottom: 58px;
     }
 
-    /* Topo HUD */
+    .classroom-wall {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(141, 110, 99, 0.14) 2px, transparent 2px);
+      background-size: 22px 22px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Topo */
     .top-hud {
       position: relative;
       z-index: 15;
+      padding: 2px 12px;
+      text-align: center;
+    }
+
+    .status-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      margin-bottom: 4px;
     }
 
     .ws-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: #261810;
-      border: 2px solid #ffd54f;
-      padding: 5px 12px;
+      background: rgba(38, 24, 16, 0.88);
+      border: 2px solid #8d6e63;
+      padding: 4px 11px;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 12px;
       color: #fff;
     }
 
@@ -72,68 +87,60 @@
       box-shadow: 0 0 10px #00e676;
     }
 
-    .round-pill {
-      background: #d84315;
-      border: 2px solid #fff;
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: #fff;
-    }
-
     .hud-actions {
       display: flex;
       gap: 6px;
     }
 
     .hud-btn {
-      background: #4e342e;
+      background: #5d4037;
       border: 2px solid #ffd54f;
       color: #fff;
       padding: 5px 10px;
       border-radius: 10px;
       font-family: 'Fredoka', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
     }
 
-    /* Título Grande e Nítido */
-    .header-title {
-      text-align: center;
-      margin: 4px 0;
-    }
-
-    .header-title h1 {
-      font-size: clamp(24px, 6.8vw, 34px);
+    .game-title {
+      font-size: clamp(23px, 6.5vw, 32px);
       color: #3e2723;
-      text-shadow: 0 2px 0 #fff;
+      text-shadow: 0 2px 0 #fff, 0 4px 10px rgba(0, 0, 0, 0.15);
       line-height: 1.05;
     }
 
-    /* Placar Top 3 Grande e Legível */
+    .subtitle {
+      font-size: 13px;
+      color: #d84315;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Ranking Top 3 */
     .mvp-bar {
       position: relative;
       z-index: 15;
       display: flex;
-      gap: 8px;
-      margin: 4px 0;
+      gap: 6px;
+      margin: 4px 12px;
     }
 
     .mvp-card {
       flex: 1;
-      background: #3e2723;
-      border: 2.5px solid #ffb300;
+      background: rgba(62, 39, 35, 0.94);
+      border: 2px solid #ffb300;
       border-radius: 14px;
-      padding: 6px 8px;
+      padding: 5px 8px;
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       min-width: 0;
     }
 
     .mvp-avatar {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 2px solid #ffd54f;
       object-fit: cover;
@@ -146,7 +153,7 @@
     }
 
     .mvp-name {
-      font-size: 13px;
+      font-size: 12px;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
@@ -154,159 +161,159 @@
     }
 
     .mvp-pts {
-      font-size: 13px;
+      font-size: 11px;
       color: #ffd54f;
     }
 
-    /* Lousa Principal Gigante */
-    .blackboard-main {
+    /* Lousa Verde */
+    .blackboard-wrapper {
       position: relative;
       z-index: 10;
       flex: 1;
-      margin: 4px 0;
-      background: radial-gradient(circle at 50% 45%, #1f4d36 0%, #0f291c 100%);
-      border: 10px solid #5d4037;
-      border-radius: 24px;
+      margin: 4px 12px;
+      background: radial-gradient(circle at 50% 45%, #245239 0%, #133121 100%);
+      border: 9px solid #6d4c41;
+      border-radius: 22px;
       box-shadow:
-        inset 0 0 35px rgba(0, 0, 0, 0.75),
-        0 10px 24px rgba(0, 0, 0, 0.35),
+        inset 0 0 38px rgba(0, 0, 0, 0.72),
+        0 10px 25px rgba(0, 0, 0, 0.35),
         0 0 0 3px #3e2723;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 12px 14px;
+      justify-content: flex-start;
       overflow: hidden;
     }
 
-    /* Barra de Tempo Animada Contínua */
-    .timer-wrapper {
-      width: 100%;
-    }
-
-    .timer-header {
+    .board-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
-      font-size: 15px;
+      padding: 8px 12px 4px;
+      font-family: 'Patrick Hand', cursive;
+      font-size: 19px;
+      color: rgba(255, 255, 255, 0.9);
+      z-index: 5;
+      flex-shrink: 0;
     }
 
-    .tag-pill {
-      background: #ffd54f;
-      color: #3e2723;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .timer-text {
-      background: rgba(0, 0, 0, 0.45);
-      border: 2px solid #69f0ae;
-      color: #69f0ae;
+    .category-badge {
+      background: rgba(255, 255, 255, 0.16);
       padding: 3px 12px;
       border-radius: 999px;
+      border: 1.5px dashed rgba(255, 255, 255, 0.6);
+      color: #fff59d;
+      font-size: 17px;
     }
 
-    .progress-track {
-      width: 100%;
-      height: 12px;
-      background: rgba(0, 0, 0, 0.45);
+    .timer-badge {
+      background: #c62828;
+      color: #fff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 14px;
+      padding: 4px 11px;
       border-radius: 999px;
-      overflow: hidden;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid #fff;
     }
 
-    .progress-fill {
-      height: 100%;
+    /* CAIXA DOS SLOTS DA RESPOSTA NO TOPO DA LOUSA (IGUAL À FORCA) */
+    .word-hint-box {
+      position: relative;
+      z-index: 20;
+      padding: 6px 8px 10px;
+      margin: 2px 8px 4px;
+      text-align: center;
+      background: rgba(8, 22, 14, 0.58);
+      border: 1.5px dashed rgba(255, 255, 255, 0.42);
+      border-radius: 14px;
+      flex-shrink: 0;
+    }
+
+    .hint-sub {
+      display: inline-block;
+      background: #ffd54f;
+      color: #3e2723;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .word-slots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 4px;
       width: 100%;
-      background: linear-gradient(90deg, #00e676, #ffd54f, #ff5252);
-      transition: width 0.95s linear;
+      padding: 0 2px;
     }
 
-    /* Caixa Central da Pergunta */
-    .riddle-center {
+    .letter-slot {
+      flex: 1;
+      max-width: 34px;
+      min-width: 16px;
+      height: 38px;
+      border-bottom: 4px dashed #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Patrick Hand', cursive;
+      font-size: clamp(20px, 5.5vw, 29px);
+      font-weight: bold;
+      color: transparent;
+      transition: all 0.25s ease;
+    }
+
+    .letter-slot.space-slot {
+      border-bottom: none;
+      background: transparent;
+      max-width: 12px;
+      min-width: 8px;
+    }
+
+    .letter-slot.revealed {
+      color: #69f0ae;
+      border-bottom: 4px solid #69f0ae;
+      background: rgba(105, 240, 174, 0.18);
+      text-shadow: 0 0 10px rgba(105, 240, 174, 0.8);
+      animation: popLetter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popLetter {
+      0% { transform: scale(0.4); }
+      100% { transform: scale(1); }
+    }
+
+    /* Área Central da Lousa: Pergunta da Charada em Giz */
+    .riddle-stage {
+      position: relative;
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: flex-start;
+      padding: 10px 14px 0;
       text-align: center;
-      padding: 8px 4px;
+      min-height: 0;
+    }
+
+    .riddle-question-card {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.24);
+      border: 1.5px dashed rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+      padding: 12px 12px;
     }
 
     .riddle-question {
-      font-size: clamp(23px, 6.4vw, 31px);
-      line-height: 1.25;
+      font-family: 'Patrick Hand', cursive;
+      font-size: clamp(23px, 6.2vw, 30px);
+      line-height: 1.22;
       color: #ffffff;
-      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.75);
-      margin-bottom: 14px;
-    }
-
-    .hint-box {
-      background: rgba(0, 0, 0, 0.48);
-      border: 2px dashed #ffd54f;
-      border-radius: 16px;
-      padding: 8px 16px;
-      font-size: clamp(18px, 5vw, 23px);
-      color: #fff59d;
-      letter-spacing: 2px;
-    }
-
-    /* Rodapé Interno da Lousa: Chat + Professora */
-    .board-footer {
-      position: relative;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      min-height: 88px;
-    }
-
-    .guess-feed {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      max-width: 68%;
-      z-index: 12;
-    }
-
-    .guess-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(18, 11, 7, 0.9);
-      border: 2px solid rgba(255, 255, 255, 0.45);
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 14px;
-      color: #fff;
-      animation: popIn 0.25s ease-out;
-    }
-
-    .guess-pill img {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    @keyframes popIn {
-      from { transform: translateX(-14px) scale(0.9); opacity: 0; }
-      to { transform: translateX(0) scale(1); opacity: 1; }
-    }
-
-    /* Professora Animada */
-    .teacher-svg {
-      width: 88px;
-      height: 102px;
-      flex-shrink: 0;
-      pointer-events: none;
-      animation: teacherBounce 1.1s ease-in-out infinite alternate;
-      filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
-    }
-
-    @keyframes teacherBounce {
-      0% { transform: translateY(0) rotate(-1.5deg); }
-      100% { transform: translateY(-5px) rotate(2deg); }
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
     }
 
     /* Banner Comemorativo (Novo Seguidor & Presentes) */
@@ -315,19 +322,19 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.6);
-      z-index: 45;
+      z-index: 40;
       background: linear-gradient(135deg, #3e2723 0%, #5d4037 100%);
       border: 3px solid #ffd54f;
-      border-radius: 22px;
-      padding: 14px 20px;
+      border-radius: 20px;
+      padding: 12px 18px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 28px rgba(255, 213, 79, 0.65);
+      gap: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 25px rgba(255, 213, 79, 0.6);
       opacity: 0;
       pointer-events: none;
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      max-width: 92%;
+      max-width: 90%;
     }
 
     #celebration-banner.show {
@@ -342,22 +349,29 @@
     }
 
     .cel-avatar {
-      width: 58px;
-      height: 58px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       border: 3px solid #00e676;
       object-fit: cover;
       flex-shrink: 0;
+      background: #8d6e63;
     }
 
     #celebration-banner.gift-mode .cel-avatar {
       border-color: #ffea00;
     }
 
+    .cel-text {
+      text-align: left;
+      overflow: hidden;
+    }
+
     .cel-tag {
-      font-size: 13px;
+      font-size: 11px;
       color: #00e676;
       font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     #celebration-banner.gift-mode .cel-tag {
@@ -365,37 +379,144 @@
     }
 
     .cel-name {
-      font-size: 20px;
+      font-size: 18px;
       color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .cel-sub {
-      font-size: 13px;
+      font-size: 12px;
       color: #ffe082;
       margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .confetti-piece {
       position: absolute;
-      width: 10px;
-      height: 15px;
+      width: 9px;
+      height: 14px;
       border-radius: 2px;
-      z-index: 44;
+      z-index: 39;
       pointer-events: none;
       animation: confettiFall 2.2s ease-out forwards;
     }
 
     @keyframes confettiFall {
-      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(480px) rotate(720deg); opacity: 0; }
+      0% {
+        transform: translateY(-20px) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(420px) rotate(720deg) scale(0.7);
+        opacity: 0;
+      }
     }
 
-    /* Overlay Fim da Charada */
-    #round-overlay {
+    /* Professora Bonitinha com Braço Animado Escrevendo (Idêntica à Forca) */
+    .teacher-container {
+      position: absolute;
+      bottom: 6px;
+      right: -2px;
+      z-index: 14;
+      width: 92px;
+      height: 108px;
+      pointer-events: none;
+      transform-origin: bottom center;
+      animation: teacherBounce 1.1s ease-in-out infinite alternate;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+    }
+
+    @keyframes teacherBounce {
+      0% { transform: translateY(0px) rotate(-1.5deg); }
+      100% { transform: translateY(-5px) rotate(2.5deg); }
+    }
+
+    .chalk-arm {
+      transform-origin: 48px 115px;
+      animation: armWrite 0.45s ease-in-out infinite alternate;
+    }
+
+    @keyframes armWrite {
+      0% { transform: rotate(-4deg); }
+      100% { transform: rotate(5deg); }
+    }
+
+    /* Balão de Fala */
+    .speech-bubble {
+      position: absolute;
+      bottom: 114px;
+      right: 8px;
+      z-index: 16;
+      background: #fff;
+      color: #3e2723;
+      padding: 5px 9px;
+      border-radius: 14px;
+      border: 2.5px solid #5d4037;
+      font-size: 11.5px;
+      font-weight: 700;
+      max-width: 165px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -9px;
+      right: 26px;
+      border-width: 9px 7px 0;
+      border-style: solid;
+      border-color: #5d4037 transparent transparent;
+    }
+
+    /* Chat Flutuante */
+    .guess-feed {
+      position: absolute;
+      bottom: 10px;
+      left: 8px;
+      z-index: 14;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 58%;
+      pointer-events: none;
+    }
+
+    .guess-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(20, 12, 8, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #fff;
+      animation: popIn 0.25s ease-out;
+    }
+
+    .guess-pill img {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    @keyframes popIn {
+      from { transform: translateX(-15px) scale(0.85); opacity: 0; }
+      to { transform: translateX(0) scale(1); opacity: 1; }
+    }
+
+    /* Overlay Fim da Rodada */
+    #winner-overlay {
       position: absolute;
       inset: 0;
-      z-index: 35;
-      background: rgba(14, 38, 24, 0.96);
+      z-index: 30;
+      background: rgba(15, 38, 24, 0.95);
       display: none;
       flex-direction: column;
       align-items: center;
@@ -404,55 +525,63 @@
       padding: 20px;
     }
 
-    #round-overlay.show {
+    #winner-overlay.show {
       display: flex;
     }
 
-    .win-avatar {
+    .winner-avatar {
       width: 96px;
       height: 96px;
       border-radius: 50%;
       border: 5px solid #ffd54f;
-      box-shadow: 0 0 30px #ffd54f;
+      box-shadow: 0 0 35px #ffd54f;
       object-fit: cover;
       margin-bottom: 10px;
     }
 
-    .overlay-badge {
+    .winner-badge {
       background: #ffd54f;
       color: #3e2723;
-      padding: 6px 18px;
+      padding: 5px 16px;
       border-radius: 999px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .answer-reveal {
-      font-size: clamp(30px, 8vw, 42px);
-      color: #69f0ae;
-      margin: 8px 0;
-      letter-spacing: 2px;
+    .winner-word {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 42px;
+      color: #81c784;
+      letter-spacing: 3px;
+      margin: 6px 0;
     }
 
-    /* Barra Inferior Grande */
+    /* Barra Inferior (Estilo neutro igual à Forca) */
     .bottom-cta {
       position: relative;
       z-index: 15;
+      margin: 2px 12px 4px;
       background: #3e2723;
       border: 3px solid #ffd54f;
       border-radius: 16px;
-      padding: 8px 12px;
+      padding: 7px 10px;
       text-align: center;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .cta-main {
-      font-size: clamp(15px, 4.2vw, 18px);
+      font-size: clamp(13.5px, 3.8vw, 17px);
       color: #ffd54f;
     }
 
-    /* Modal Configurações */
+    .cta-sub {
+      font-size: 11.5px;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    /* Modal */
     #config-modal {
       position: absolute;
       inset: 0;
@@ -471,7 +600,7 @@
 
     .input-group label {
       display: block;
-      font-size: 14px;
+      font-size: 13px;
       color: #ffe082;
       margin-bottom: 4px;
     }
@@ -504,49 +633,50 @@
       padding: 11px;
       border-radius: 12px;
       font-family: 'Fredoka', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div id="game-container">
-    <!-- HUD Topo -->
+    <div class="classroom-wall"></div>
+
+    <!-- Topo -->
     <div class="top-hud">
-      <div class="ws-badge">
-        <span class="ws-dot" id="ws-dot"></span>
-        <span id="ws-status">PRONTO</span>
+      <div class="status-bar">
+        <div class="ws-badge">
+          <span class="ws-dot" id="ws-dot"></span>
+          <span id="ws-status">PRONTO</span>
+        </div>
+        <div class="hud-actions">
+          <button class="hud-btn" id="music-btn" onclick="toggleMusic()">🎵 Som: OFF</button>
+          <button class="hud-btn" onclick="toggleModal()">⚙️ Live</button>
+        </div>
       </div>
-      <div class="round-pill" id="round-counter">1 / 200</div>
-      <div class="hud-actions">
-        <button class="hud-btn" id="music-btn" onclick="toggleMusic()">🎵 OFF</button>
-        <button class="hud-btn" onclick="toggleModal()">⚙️ Live</button>
-      </div>
+
+      <h1 class="game-title">O QUE É, O QUE É?</h1>
+      <p class="subtitle">Adivinhe a resposta da charada!</p>
     </div>
 
-    <!-- Título -->
-    <div class="header-title">
-      <h1>O QUE É, O QUE É?</h1>
-    </div>
-
-    <!-- Top 3 Jogadores -->
+    <!-- Top 3 Alunos -->
     <div class="mvp-bar">
       <div class="mvp-card">
-        <img class="mvp-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Top1" alt="">
+        <img class="mvp-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno1" alt="">
         <div class="mvp-info">
           <div class="mvp-name">1º Aguardando</div>
           <div class="mvp-pts">0 ⭐</div>
         </div>
       </div>
       <div class="mvp-card">
-        <img class="mvp-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Top2" alt="">
+        <img class="mvp-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno2" alt="">
         <div class="mvp-info">
           <div class="mvp-name">2º Aguardando</div>
           <div class="mvp-pts">0 ⭐</div>
         </div>
       </div>
       <div class="mvp-card">
-        <img class="mvp-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Top3" alt="">
+        <img class="mvp-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno3" alt="">
         <div class="mvp-info">
           <div class="mvp-name">3º Aguardando</div>
           <div class="mvp-pts">0 ⭐</div>
@@ -554,88 +684,115 @@
       </div>
     </div>
 
-    <!-- Lousa Principal Grande -->
-    <div class="blackboard-main" id="blackboard">
-      <div class="timer-wrapper">
-        <div class="timer-header">
-          <span class="tag-pill">🧠 CHARADA AO VIVO</span>
-          <span class="timer-text" id="timer-label">⏱️ 45s</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
+    <!-- Lousa Verde -->
+    <div class="blackboard-wrapper" id="blackboard">
+      <div class="board-header">
+        <span class="category-badge" id="round-label">Charada 1/200</span>
+        <span class="timer-badge" id="timer-label">⏱️ 45s</span>
       </div>
 
-      <!-- Pergunta e Dica em Fonte Grande -->
-      <div class="riddle-center">
-        <div class="riddle-question" id="riddle-question">Carregando charada...</div>
-        <div class="hint-box" id="riddle-hint">DICA: _ _ _ _ _</div>
+      <!-- LINHA PONTILHADA COM AS LETRAS DA RESPOSTA (IGUAL À FORCA) -->
+      <div class="word-hint-box">
+        <div class="hint-sub" id="letters-count">RESPOSTA COM 5 LETRAS</div>
+        <div class="word-slots" id="word-slots"></div>
       </div>
 
-      <!-- Rodapé da Lousa: Palpites + Professora -->
-      <div class="board-footer">
-        <div class="guess-feed" id="guess-feed"></div>
-
-        <svg class="teacher-svg" viewBox="0 0 160 185">
-          <path d="M36 72 C24 105, 28 145, 42 162 L118 162 C132 145, 136 105, 124 72 Z" fill="#4e342e"/>
-          <circle cx="80" cy="24" r="19" fill="#3e2723"/>
-          <path d="M62 34 L76 40 L62 46 Z" fill="#ff1744"/>
-          <path d="M98 34 L84 40 L98 46 Z" fill="#ff1744"/>
-          <circle cx="80" cy="40" r="5" fill="#d50000"/>
-          <path d="M40 180 C40 128, 120 128, 120 180 Z" fill="#ec407a"/>
-          <path d="M58 132 L80 156 L102 132 L92 126 L80 142 L68 126 Z" fill="#fff"/>
-          <rect x="70" y="98" width="20" height="28" rx="9" fill="#ffe0b2"/>
-          <circle cx="80" cy="68" r="34" fill="#ffe0b2"/>
-          <path d="M46 66 C46 34, 114 34, 114 66 C104 48, 88 56, 80 46 C72 56, 56 48, 46 66 Z" fill="#3e2723"/>
-          <circle cx="66" cy="66" r="6" fill="#212121"/>
-          <circle cx="64" cy="64" r="2" fill="#fff"/>
-          <circle cx="94" cy="66" r="6" fill="#212121"/>
-          <circle cx="92" cy="64" r="2" fill="#fff"/>
-          <circle cx="66" cy="66" r="10.5" fill="none" stroke="#5d4037" stroke-width="2.2"/>
-          <circle cx="94" cy="66" r="10.5" fill="none" stroke="#5d4037" stroke-width="2.2"/>
-          <path d="M73 81 Q80 89 87 81 Z" fill="#ff5252"/>
-        </svg>
+      <!-- Pergunta da Charada em Giz -->
+      <div class="riddle-stage">
+        <div class="riddle-question-card">
+          <div class="riddle-question" id="riddle-question">Carregando charada...</div>
+        </div>
       </div>
 
       <!-- Banner Comemorativo (Novo Seguidor & Presentes) -->
       <div id="celebration-banner">
         <img class="cel-avatar" id="cel-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Seguidor" alt="">
-        <div>
+        <div class="cel-text">
           <div class="cel-tag" id="cel-tag">🎉 NOVO SEGUIDOR!</div>
           <div class="cel-name" id="cel-name">@Aluno</div>
           <div class="cel-sub" id="cel-sub">Bem-vindo(a) à turma!</div>
         </div>
       </div>
 
-      <!-- Overlay Fim da Charada -->
-      <div id="round-overlay">
-        <div class="overlay-badge" id="overlay-badge">🎉 ACERTOU (+10 PONTOS)!</div>
-        <img class="win-avatar" id="win-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Win" alt="">
-        <h2 style="font-size:24px;color:#fff;" id="win-name">@Aluno</h2>
-        <div class="answer-reveal" id="win-answer">RESPOSTA</div>
-        <p style="color:#ffe082;font-size:15px;">Próxima charada em 4 segundos...</p>
+      <!-- Palpites recentes -->
+      <div class="guess-feed" id="guess-feed"></div>
+
+      <!-- Balão da Professora -->
+      <div class="speech-bubble" id="teacher-speech">Qual é a resposta? ✍️</div>
+
+      <!-- Professora Bonitinha com Braço Escrevendo -->
+      <svg class="teacher-container" viewBox="0 0 160 185">
+        <path d="M36 72 C24 105, 28 145, 42 162 L118 162 C132 145, 136 105, 124 72 Z" fill="#4e342e"/>
+        <circle cx="80" cy="24" r="19" fill="#3e2723"/>
+        <path d="M62 34 L76 40 L62 46 Z" fill="#ff1744"/>
+        <path d="M98 34 L84 40 L98 46 Z" fill="#ff1744"/>
+        <circle cx="80" cy="40" r="5" fill="#d50000"/>
+
+        <path d="M40 180 C40 128, 120 128, 120 180 Z" fill="#ec407a"/>
+        <path d="M58 132 L80 156 L102 132 L92 126 L80 142 L68 126 Z" fill="#fff"/>
+        <circle cx="80" cy="164" r="2.5" fill="#fff"/>
+        <circle cx="80" cy="174" r="2.5" fill="#fff"/>
+
+        <rect x="70" y="98" width="20" height="28" rx="9" fill="#ffe0b2"/>
+        <circle cx="80" cy="68" r="34" fill="#ffe0b2"/>
+        <path d="M46 66 C46 34, 114 34, 114 66 C104 48, 88 56, 80 46 C72 56, 56 48, 46 66 Z" fill="#3e2723"/>
+
+        <ellipse cx="60" cy="77" rx="6" ry="3.5" fill="#ff8a80" opacity="0.7"/>
+        <ellipse cx="100" cy="77" rx="6" ry="3.5" fill="#ff8a80" opacity="0.7"/>
+
+        <path d="M59 54 Q66 50 72 54" fill="none" stroke="#3e2723" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M88 54 Q94 50 101 54" fill="none" stroke="#3e2723" stroke-width="2.2" stroke-linecap="round"/>
+
+        <circle cx="66" cy="66" r="6.5" fill="#212121"/>
+        <circle cx="64" cy="64" r="2.3" fill="#fff"/>
+        <circle cx="94" cy="66" r="6.5" fill="#212121"/>
+        <circle cx="92" cy="64" r="2.3" fill="#fff"/>
+
+        <circle cx="66" cy="66" r="11" fill="rgba(255,255,255,0.12)" stroke="#5d4037" stroke-width="2.3"/>
+        <circle cx="94" cy="66" r="11" fill="rgba(255,255,255,0.12)" stroke="#5d4037" stroke-width="2.3"/>
+        <path d="M77 65 Q80 63 83 65" fill="none" stroke="#5d4037" stroke-width="2.3"/>
+
+        <circle cx="80" cy="73" r="1.6" fill="#e59866"/>
+        <path d="M73 81 Q80 89 87 81 Z" fill="#ff5252"/>
+
+        <g class="chalk-arm">
+          <path d="M48 136 Q20 112 24 82" fill="none" stroke="#ffe0b2" stroke-width="12" stroke-linecap="round"/>
+          <path d="M48 136 Q34 125 30 114" fill="none" stroke="#ec407a" stroke-width="14" stroke-linecap="round"/>
+          <rect x="14" y="68" width="7" height="19" rx="3" transform="rotate(-28 14 68)" fill="#fff" stroke="#cfd8dc" stroke-width="1"/>
+        </g>
+      </svg>
+
+      <!-- Overlay Fim da Rodada -->
+      <div id="winner-overlay">
+        <div class="winner-badge" id="win-status-badge">🎉 RESPOSTA DESCOBERTA! 🎉</div>
+        <img class="winner-avatar" id="winner-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Win" alt="">
+        <h2 id="winner-name" style="font-size: 26px; color: #fff;">@Aluno</h2>
+        <div class="winner-word" id="winner-word">CHUVA</div>
+        <p style="color: #ffe082; font-size: 15px;">Próxima charada em 4 segundos...</p>
       </div>
     </div>
 
-    <!-- Barra Inferior -->
+    <!-- Barra Inferior (Estilo neutro igual à Forca) -->
     <div class="bottom-cta">
-      <div class="cta-main">✍️ RESPONDA NO CHAT PARA GANHAR +10 PONTOS!</div>
+      <div class="cta-main">🧠 QUAL É A RESPOSTA DA CHARADA?</div>
+      <div class="cta-sub">⭐ Acerte a charada para subir no ranking da turma!</div>
     </div>
 
     <!-- Modal -->
     <div id="config-modal">
-      <h2 style="color:#ffd54f;text-align:center;">Configurar Live & Testes</h2>
+      <h2 style="color: #ffd54f; text-align: center;">Configurar Live & Testes</h2>
       <div class="input-group">
         <label>URL WebSocket (Render):</label>
         <input type="text" id="ws-url-input" placeholder="wss://ponte-tiktok-yfrh.onrender.com" />
       </div>
       <button class="btn-primary" onclick="saveAndConnect()">Salvar e Conectar</button>
-      <hr style="border-color:rgba(255,255,255,0.15);">
-      <button class="btn-secondary" id="sim-btn" onclick="toggleSimulation()">▶️ Simular Chat Jogando</button>
+      <hr style="border-color: rgba(255,255,255,0.15);">
+      <button class="btn-secondary" id="sim-btn" onclick="toggleSimulation()">▶️ Simular Alunos Jogando</button>
       <button class="btn-secondary" onclick="testFollowCelebration()">🎉 Testar Novo Seguidor (Confetes)</button>
       <button class="btn-secondary" onclick="testGiftCelebration()">🎁 Testar Presente (Confetes)</button>
-      <button class="btn-secondary" onclick="nextRiddle(false)">⏭️ Pular Charada</button>
-      <button class="btn-secondary" style="border-color:#ff5252;color:#ff8a80;" onclick="toggleModal()">Fechar</button>
+      <button class="btn-secondary" onclick="revealFirstHintLetter()">💡 Revelar 1 Letra Dica</button>
+      <button class="btn-secondary" onclick="skipRiddle()">⏭️ Pular Charada</button>
+      <button class="btn-secondary" style="border-color: #ff5252; color: #ff8a80;" onclick="toggleModal()">Fechar</button>
     </div>
   </div>
 
@@ -843,19 +1000,20 @@
       { q: "É invisível, a gente respira o tempo todo e sem ele não vive?", a: ["AR", "OXIGENIO", "O AR"] }
     ];
 
-    function shuffle(arr) {
+    function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
     }
-    shuffle(RIDDLES);
+    shuffleArray(RIDDLES);
 
-    let leaderboard = {};
     let currentIdx = 0;
+    let revealedIndices = new Set();
     let timeLeft = 45;
     let timerInterval = null;
     let roundActive = true;
+    let leaderboard = {};
     let ws = null;
     let simInterval = null;
     let keepAliveTimer = null;
@@ -864,11 +1022,11 @@
     let celTimer = null;
 
     const defaultAvatars = [
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno1',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno2',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno3',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno4',
-      'https://api.dicebear.com/7.x/avataaars/svg?seed=Aluno5'
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Ana',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Pedro',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Carla',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Lucas',
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=Julia'
     ];
 
     // Áudio
@@ -876,29 +1034,29 @@
     const audioCtx = new AudioContext();
     let musicOn = false;
     let musicTimer = null;
-    let step = 0;
-    const notes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880.00, 783.99];
+    let noteStep = 0;
+    const melody = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880.00, 783.99];
 
     function toggleMusic() {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const btn = document.getElementById('music-btn');
       if (!musicOn) {
         musicOn = true;
-        btn.textContent = '🎵 ON';
+        btn.textContent = '🎵 Som: ON';
         btn.style.background = '#2e7d32';
         musicTimer = setInterval(() => {
-          playTone(notes[step % notes.length], 0.22, 0.035, 'triangle');
-          step++;
-        }, 440);
+          playTone(melody[noteStep % melody.length], 0.25, 0.04, 'triangle');
+          noteStep++;
+        }, 420);
       } else {
         musicOn = false;
         clearInterval(musicTimer);
-        btn.textContent = '🎵 OFF';
+        btn.textContent = '🎵 Som: OFF';
         btn.style.background = '';
       }
     }
 
-    function playTone(freq, dur = 0.25, vol = 0.08, type = 'sine') {
+    function playTone(freq, dur = 0.28, vol = 0.08, type = 'sine') {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const now = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
@@ -913,126 +1071,7 @@
       osc.stop(now + dur);
     }
 
-    function normalize(str) {
-      return str
-        .toUpperCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^A-Z0-9 ]/g, "")
-        .trim();
-    }
-
-    function addPoints(name, avatar, pts) {
-      if (!leaderboard[name]) leaderboard[name] = { name, avatar, pts: 0 };
-      leaderboard[name].avatar = avatar || leaderboard[name].avatar;
-      leaderboard[name].pts += pts;
-
-      const sorted = Object.values(leaderboard).sort((a, b) => b.pts - a.pts).slice(0, 3);
-      const cards = document.querySelectorAll('.mvp-card');
-      sorted.forEach((u, i) => {
-        if (cards[i]) {
-          cards[i].querySelector('img').src = u.avatar;
-          cards[i].querySelector('.mvp-name').textContent = `${i + 1}º ${u.name}`;
-          cards[i].querySelector('.mvp-pts').textContent = `${u.pts} ⭐`;
-        }
-      });
-    }
-
-    function startRiddle() {
-      roundActive = true;
-      timeLeft = 45;
-      document.getElementById('round-overlay').classList.remove('show');
-      document.getElementById('guess-feed').innerHTML = '';
-
-      const item = RIDDLES[currentIdx];
-      const mainAns = item.a[0];
-      const masked = mainAns.split('').map(ch => (ch === ' ' ? '  ' : '_')).join(' ');
-
-      document.getElementById('round-counter').textContent = `${currentIdx + 1} / ${RIDDLES.length}`;
-      document.getElementById('riddle-question').textContent = item.q;
-      document.getElementById('riddle-hint').textContent = `DICA (${mainAns.replace(/ /g, '').length} LETRAS): ${masked}`;
-      document.getElementById('timer-label').textContent = `⏱️ ${timeLeft}s`;
-      document.getElementById('progress-fill').style.width = '100%';
-
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        if (!roundActive) return;
-        timeLeft--;
-        document.getElementById('timer-label').textContent = `⏱️ ${timeLeft}s`;
-        document.getElementById('progress-fill').style.width = `${Math.max(0, (timeLeft / 45) * 100)}%`;
-
-        if (timeLeft === 22) {
-          const revealFirst = mainAns.split('').map((ch, idx) => (idx === 0 ? ch : (ch === ' ' ? '  ' : '_'))).join(' ');
-          document.getElementById('riddle-hint').textContent = `DICA: ${revealFirst}`;
-        }
-
-        if (timeLeft <= 0) {
-          finishRiddle(false, null, null);
-        }
-      }, 1000);
-    }
-
-    function addGuessPill(name, avatar, text) {
-      const feed = document.getElementById('guess-feed');
-      const div = document.createElement('div');
-      div.className = 'guess-pill';
-      div.innerHTML = `<img src="${avatar}" onerror="this.src='${defaultAvatars[0]}'"><span><b>${name}:</b> ${text}</span>`;
-      feed.appendChild(div);
-      if (feed.children.length > 3) feed.removeChild(feed.firstChild);
-    }
-
-    function handleChat(name, avatar, text) {
-      if (!text || !roundActive) return;
-      addGuessPill(name, avatar, text.slice(0, 20));
-
-      const guess = normalize(text);
-      const answers = RIDDLES[currentIdx].a.map(normalize);
-
-      const hit = answers.some(ans => guess === ans || (ans.length >= 4 && guess.includes(ans)));
-      if (hit) {
-        addPoints(name, avatar, 10);
-        finishRiddle(true, name, avatar);
-      }
-    }
-
-    function finishRiddle(won, winnerName, winnerAvatar) {
-      roundActive = false;
-      clearInterval(timerInterval);
-
-      const overlay = document.getElementById('round-overlay');
-      const badge = document.getElementById('overlay-badge');
-      const wAvatar = document.getElementById('win-avatar');
-      const wName = document.getElementById('win-name');
-      const wAns = document.getElementById('win-answer');
-
-      wAns.textContent = RIDDLES[currentIdx].a[0];
-
-      if (won) {
-        badge.textContent = '🎉 ACERTOU (+10 PONTOS)!';
-        wAvatar.src = winnerAvatar || defaultAvatars[0];
-        wAvatar.style.display = 'block';
-        wName.textContent = winnerName;
-        playTone(523.25, 0.14, 0.1);
-        setTimeout(() => playTone(659.25, 0.14, 0.1), 130);
-        setTimeout(() => playTone(880.00, 0.35, 0.1), 260);
-      } else {
-        badge.textContent = '⏰ TEMPO ESGOTADO!';
-        wAvatar.style.display = 'none';
-        wName.textContent = 'A resposta era:';
-      }
-
-      overlay.classList.add('show');
-      setTimeout(() => nextRiddle(true), 4200);
-    }
-
-    function nextRiddle(fromAuto) {
-      if (!fromAuto) toggleModal();
-      currentIdx = (currentIdx + 1) % RIDDLES.length;
-      if (currentIdx === 0) shuffle(RIDDLES);
-      startRiddle();
-    }
-
-    // Banner Comemorativo (Novo Seguidor & Presente - sem pontos)
+    // Banner Comemorativo (Novo Seguidor & Presente)
     function triggerCelebration({ isGift, tag, name, sub, avatar }) {
       const banner = document.getElementById('celebration-banner');
       const cTag = document.getElementById('cel-tag');
@@ -1046,6 +1085,8 @@
       cName.textContent = name;
       cSub.textContent = sub;
       cAvatar.src = avatar || defaultAvatars[0];
+      cAvatar.onerror = () => { cAvatar.src = defaultAvatars[0]; };
+
       banner.classList.add('show');
 
       if (isGift) {
@@ -1054,6 +1095,7 @@
         setTimeout(() => playTone(1046.5, 0.14, 0.1), 200);
         setTimeout(() => playTone(1318.5, 0.35, 0.11), 300);
       } else {
+        document.getElementById('teacher-speech').textContent = `Bem-vindo(a), ${name}! 🎉`;
         playTone(587.33, 0.14, 0.09);
         setTimeout(() => playTone(783.99, 0.14, 0.09), 110);
         setTimeout(() => playTone(1046.5, 0.3, 0.1), 220);
@@ -1066,15 +1108,18 @@
       for (let i = 0; i < 36; i++) {
         const conf = document.createElement('div');
         conf.className = 'confetti-piece';
-        conf.style.left = `${Math.random() * 94 + 3}%`;
+        conf.style.left = `${Math.random() * 96 + 2}%`;
         conf.style.top = `${Math.random() * 25}%`;
         conf.style.backgroundColor = colors[i % colors.length];
+        conf.style.animationDuration = `${1.6 + Math.random() * 1.1}s`;
         board.appendChild(conf);
-        setTimeout(() => conf.remove(), 2600);
+        setTimeout(() => conf.remove(), 2800);
       }
 
       clearTimeout(celTimer);
-      celTimer = setTimeout(() => banner.classList.remove('show'), 3800);
+      celTimer = setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3800);
     }
 
     function showFollowCelebration(name, avatar) {
@@ -1100,15 +1145,179 @@
 
     function testFollowCelebration() {
       toggleModal();
-      showFollowCelebration('@MariaClara', defaultAvatars[0]);
+      const sampleAvatar = defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)];
+      showFollowCelebration('@MariaClara', sampleAvatar);
     }
 
     function testGiftCelebration() {
       toggleModal();
-      showGiftCelebration('@LucasSilva', defaultAvatars[2], 'Rosa', 5);
+      const sampleAvatar = defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)];
+      showGiftCelebration('@LucasSilva', sampleAvatar, 'Rosa', 5);
     }
 
-    // Conexão Ponte TikTok
+    function normalizeText(str) {
+      return str
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Z0-9 ]/g, "")
+        .trim();
+    }
+
+    function renderAnswerSlots() {
+      const mainAns = RIDDLES[currentIdx].a[0];
+      const container = document.getElementById('word-slots');
+      container.innerHTML = '';
+
+      mainAns.split('').forEach((ch, idx) => {
+        const slot = document.createElement('div');
+        if (ch === ' ') {
+          slot.className = 'letter-slot space-slot';
+          slot.textContent = ' ';
+        } else {
+          const isRev = revealedIndices.has(idx);
+          slot.className = `letter-slot ${isRev ? 'revealed' : ''}`;
+          slot.textContent = isRev ? ch : '_';
+        }
+        container.appendChild(slot);
+      });
+    }
+
+    function revealFirstHintLetter() {
+      const mainAns = RIDDLES[currentIdx].a[0];
+      for (let i = 0; i < mainAns.length; i++) {
+        if (mainAns[i] !== ' ' && !revealedIndices.has(i)) {
+          revealedIndices.add(i);
+          renderAnswerSlots();
+          playTone(880, 0.25, 0.07);
+          document.getElementById('teacher-speech').textContent = `Dica na lousa! Começa com "${mainAns[i]}"! 💡`;
+          break;
+        }
+      }
+    }
+
+    function startNewRound() {
+      roundActive = true;
+      revealedIndices.clear();
+      timeLeft = 45;
+
+      document.getElementById('winner-overlay').classList.remove('show');
+      document.getElementById('guess-feed').innerHTML = '';
+
+      const item = RIDDLES[currentIdx];
+      const mainAns = item.a[0];
+      const letterCount = mainAns.replace(/ /g, '').length;
+
+      document.getElementById('round-label').textContent = `Charada ${currentIdx + 1}/${RIDDLES.length}`;
+      document.getElementById('letters-count').textContent = `RESPOSTA COM ${letterCount} ${letterCount === 1 ? 'LETRA' : 'LETRAS'}`;
+      document.getElementById('riddle-question').textContent = item.q;
+      document.getElementById('timer-label').textContent = `⏱️ ${timeLeft}s`;
+      document.getElementById('teacher-speech').textContent = `Qual é a resposta? ✍️`;
+      renderAnswerSlots();
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (!roundActive) return;
+        timeLeft--;
+        document.getElementById('timer-label').textContent = `⏱️ ${timeLeft}s`;
+
+        if (timeLeft === 22) {
+          revealFirstHintLetter();
+        }
+
+        if (timeLeft <= 0) {
+          finishRound(false, null, null);
+        }
+      }, 1000);
+    }
+
+    function addGuessPill(name, avatar, text) {
+      const feed = document.getElementById('guess-feed');
+      const pill = document.createElement('div');
+      pill.className = 'guess-pill';
+      pill.innerHTML = `<img src="${avatar}" onerror="this.src='${defaultAvatars[0]}'"><span><b>${name}:</b> ${text}</span>`;
+      feed.appendChild(pill);
+      if (feed.children.length > 3) feed.removeChild(feed.firstChild);
+    }
+
+    function addPoints(name, avatar, pts) {
+      if (!leaderboard[name]) leaderboard[name] = { name, avatar, pts: 0 };
+      leaderboard[name].avatar = avatar || leaderboard[name].avatar;
+      leaderboard[name].pts += pts;
+
+      const sorted = Object.values(leaderboard).sort((a, b) => b.pts - a.pts).slice(0, 3);
+      const cards = document.querySelectorAll('.mvp-card');
+      sorted.forEach((u, i) => {
+        if (cards[i]) {
+          cards[i].querySelector('img').src = u.avatar;
+          cards[i].querySelector('.mvp-name').textContent = `${i + 1}º ${u.name}`;
+          cards[i].querySelector('.mvp-pts').textContent = `${u.pts} ⭐`;
+        }
+      });
+    }
+
+    function processChat(name, avatar, rawComment) {
+      if (!roundActive || !rawComment) return;
+      addGuessPill(name, avatar, rawComment.slice(0, 18));
+
+      const guess = normalizeText(rawComment);
+      if (!guess) return;
+
+      const answers = RIDDLES[currentIdx].a.map(normalizeText);
+      const hit = answers.some(ans => guess === ans || (ans.length >= 4 && guess.includes(ans)));
+
+      if (hit) {
+        const mainAns = RIDDLES[currentIdx].a[0];
+        for (let i = 0; i < mainAns.length; i++) revealedIndices.add(i);
+        renderAnswerSlots();
+        addPoints(name, avatar, 10);
+        finishRound(true, name, avatar);
+      }
+    }
+
+    function finishRound(won, winnerName, winnerAvatar) {
+      roundActive = false;
+      clearInterval(timerInterval);
+
+      const mainAns = RIDDLES[currentIdx].a[0];
+      const overlay = document.getElementById('winner-overlay');
+      const badge = document.getElementById('win-status-badge');
+      const wName = document.getElementById('winner-name');
+      const wAvatar = document.getElementById('winner-avatar');
+      const wWord = document.getElementById('winner-word');
+
+      wWord.textContent = mainAns;
+
+      if (won) {
+        badge.textContent = '🎉 ACERTOU A CHARADA! 🎉';
+        wName.textContent = winnerName;
+        wAvatar.src = winnerAvatar;
+        wAvatar.style.display = 'block';
+        playTone(523.25, 0.15, 0.1);
+        setTimeout(() => playTone(659.25, 0.15, 0.1), 140);
+        setTimeout(() => playTone(783.99, 0.4, 0.1), 280);
+      } else {
+        badge.textContent = '⏰ TEMPO ESGOTADO!';
+        wName.textContent = 'A resposta era:';
+        wAvatar.style.display = 'none';
+      }
+
+      overlay.classList.add('show');
+
+      setTimeout(() => {
+        currentIdx = (currentIdx + 1) % RIDDLES.length;
+        if (currentIdx === 0) shuffleArray(RIDDLES);
+        startNewRound();
+      }, 4200);
+    }
+
+    function skipRiddle() {
+      currentIdx = (currentIdx + 1) % RIDDLES.length;
+      startNewRound();
+      toggleModal();
+    }
+
+    // WebSocket Ponte TikTok
     function connectWebSocket(url) {
       if (!url) return;
       currentWsUrl = url;
@@ -1131,8 +1340,11 @@
         ws.onopen = () => {
           dot.classList.add('connected');
           status.textContent = 'AO VIVO';
+
           keepAliveTimer = setInterval(() => {
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping');
+            if (ws && ws.readyState === WebSocket.OPEN) {
+              ws.send('ping');
+            }
           }, 7000);
         };
 
@@ -1158,18 +1370,29 @@
             const avatar = data.profilePictureUrl || defaultAvatars[0];
 
             if (ev === 'chat' && data.comment) {
-              handleChat(name, avatar, data.comment);
+              processChat(name, avatar, data.comment);
             } else if (ev === 'follow') {
               showFollowCelebration(name, avatar);
             } else if (ev === 'gift') {
               showGiftCelebration(name, avatar, data.giftName || 'Presente', data.repeatCount || 1);
+              revealFirstHintLetter();
+              document.getElementById('teacher-speech').textContent = `Valeu ${name}! Letra dica! 💡`;
             }
           } catch (e) {}
         };
       } catch (e) {
+        status.textContent = 'ERRO URL';
         reconnectTimer = setTimeout(() => connectWebSocket(currentWsUrl), 2000);
       }
     }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && currentWsUrl) {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+          connectWebSocket(currentWsUrl);
+        }
+      }
+    });
 
     function toggleModal() {
       document.getElementById('config-modal').classList.toggle('open');
@@ -1187,23 +1410,23 @@
       if (simInterval) {
         clearInterval(simInterval);
         simInterval = null;
-        btn.textContent = '▶️ Simular Chat Jogando';
+        btn.textContent = '▶️ Simular Alunos Jogando';
       } else {
         btn.textContent = '⏸️ Pausar Simulação';
         simInterval = setInterval(() => {
           if (!roundActive) return;
-          const names = ["Beatriz", "Gabriel", "Larissa", "Matheus", "Camila", "Rafael", "Fernanda"];
+          const names = ["Ana Clara", "Pedro H.", "Lucas M.", "Mariana", "João V."];
           const name = names[Math.floor(Math.random() * names.length)];
           const avatar = defaultAvatars[Math.floor(Math.random() * defaultAvatars.length)];
-          const hitChance = Math.random() < 0.25;
-          const text = hitChance ? RIDDLES[currentIdx].a[0] : "Será que é abacaxi?";
-          handleChat(name, avatar, text);
+          const hit = Math.random() < 0.25;
+          const guess = hit ? RIDDLES[currentIdx].a[0] : "Será que é bola?";
+          processChat(name, avatar, guess);
         }, 1600);
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      startRiddle();
+      startNewRound();
       const defaultUrl = 'wss://ponte-tiktok-yfrh.onrender.com';
       const savedUrl = localStorage.getItem('tiktok_ws_url') || defaultUrl;
       document.getElementById('ws-url-input').value = savedUrl;
